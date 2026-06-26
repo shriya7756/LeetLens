@@ -1,0 +1,9 @@
+[[redirects]]
+  from = "/LeetLens"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/LeetLens.html"
+  to = "/index.html"
+  status = 301
