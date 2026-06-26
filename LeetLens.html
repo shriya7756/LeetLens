@@ -636,25 +636,57 @@
     /* ── Fetch LeetCode Stats ── */
     async function fetchLeetCodeStats() {
       const username = 'shriya_1411';
+      
+      // API 1: Alfa LeetCode API (Render)
+      try {
+        const res = await fetch(`https://alfa-leetcode-api.onrender.com/${username}/solved`);
+        const data = await res.json();
+        if (data && data.solvedProblem !== undefined) {
+          return {
+            total: data.solvedProblem || 0,
+            easy: data.easySolved || 0,
+            medium: data.mediumSolved || 0,
+            hard: data.hardSolved || 0
+          };
+        }
+      } catch (e) {
+        console.error('Alfa API failed:', e);
+      }
+
+      // API 2: Heroku Stats API
       try {
         const res = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
         const data = await res.json();
-        
         if (data && data.status === 'success') {
           return {
             total: data.totalSolved || 0,
             easy: data.easySolved || 0,
             medium: data.mediumSolved || 0,
-            hard: data.hardSolved || 0,
-            totalAll: data.totalQuestions || 1 // Avoid division by zero
+            hard: data.hardSolved || 0
           };
         }
       } catch (e) {
-        console.error('Error fetching LeetCode stats:', e);
+        console.error('Heroku API failed:', e);
+      }
+
+      // API 3: Vercel API
+      try {
+        const res = await fetch(`https://leetcode-api-faisalshohag.vercel.app/${username}`);
+        const data = await res.json();
+        if (data && data.totalSolved !== undefined) {
+          return {
+            total: data.totalSolved || 0,
+            easy: data.easySolved || 0,
+            medium: data.mediumSolved || 0,
+            hard: data.hardSolved || 0
+          };
+        }
+      } catch (e) {
+        console.error('Vercel API failed:', e);
       }
       
-      // Fallback values if API fails
-      return { total: 82, easy: 42, medium: 31, hard: 9, totalAll: 3000 };
+      // If all APIs fail, return 0 so we don't show wrong mock data
+      return { total: 0, easy: 0, medium: 0, hard: 0 };
     }
 
     /* ── Intersection Observer to trigger on scroll into view ── */
