@@ -3,7 +3,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Shriya's Coding Journey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeetLens – Shriya's Coding Journey</title>
+  <meta name="description" content="Track Shriya's LeetCode progress, coding journey, and problem-solving milestones.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-96NZHDFCYR"></script>
@@ -11,22 +17,646 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-96NZHDFCYR');
   </script>
+
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-dark: #050810;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(251, 191, 36, 0.4);
+      --text-primary: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-yellow: #fbbf24;
+      --accent-orange: #f97316;
+      --accent-green: #22c55e;
+      --accent-blue: #60a5fa;
+      --accent-purple: #a78bfa;
+      --easy: #22c55e;
+      --medium: #fbbf24;
+      --hard: #f97316;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Animated gradient background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(251,191,36,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(167,139,250,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(96,165,250,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Canvas particles ── */
+    #canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Layout ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 80px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 80px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-logo span {
+      font-weight: 300;
+      -webkit-text-fill-color: var(--text-muted);
+    }
+
+    .nav-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      max-width: 720px;
+      margin-bottom: 64px;
+      animation: fadeUp 0.9s ease 0.2s both;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-yellow);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      background: rgba(251,191,36,0.08);
+      padding: 6px 16px;
+      border-radius: 100px;
+      border: 1px solid rgba(251,191,36,0.2);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-orange) 50%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── Stats Grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.9s ease 0.35s both;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-color 0.3s ease,
+                  box-shadow 0.3s ease;
+      cursor: default;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .stat-card.easy::before  { background: radial-gradient(circle at top left, rgba(34,197,94,0.12), transparent 70%); }
+    .stat-card.medium::before { background: radial-gradient(circle at top left, rgba(251,191,36,0.12), transparent 70%); }
+    .stat-card.hard::before  { background: radial-gradient(circle at top left, rgba(249,115,22,0.12), transparent 70%); }
+
+    .stat-card:hover { transform: translateY(-6px) scale(1.02); }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-card.easy:hover  { border-color: rgba(34,197,94,0.4);  box-shadow: 0 20px 50px rgba(34,197,94,0.12); }
+    .stat-card.medium:hover { border-color: rgba(251,191,36,0.4); box-shadow: 0 20px 50px rgba(251,191,36,0.12); }
+    .stat-card.hard:hover  { border-color: rgba(249,115,22,0.4);  box-shadow: 0 20px 50px rgba(249,115,22,0.12); }
+
+    .stat-label {
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-card.easy  .stat-label { color: var(--easy); }
+    .stat-card.medium .stat-label { color: var(--medium); }
+    .stat-card.hard  .stat-label { color: var(--hard); }
+
+    .stat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .easy  .stat-dot { background: var(--easy); box-shadow: 0 0 8px var(--easy); }
+    .medium .stat-dot { background: var(--medium); box-shadow: 0 0 8px var(--medium); }
+    .hard  .stat-dot { background: var(--hard); box-shadow: 0 0 8px var(--hard); }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat-bar-bg {
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      width: 0%;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .easy  .stat-bar-fill { background: linear-gradient(90deg, var(--easy), #86efac); }
+    .medium .stat-bar-fill { background: linear-gradient(90deg, var(--medium), #fde68a); }
+    .hard  .stat-bar-fill { background: linear-gradient(90deg, var(--hard), #fdba74); }
+
+    /* ── Total Card ── */
+    .total-card {
+      width: 100%;
+      max-width: 900px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      animation: fadeUp 0.9s ease 0.45s both;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .total-card:hover {
+      border-color: rgba(96,165,250,0.3);
+      box-shadow: 0 20px 50px rgba(96,165,250,0.08);
+    }
+
+    .total-left { display: flex; flex-direction: column; gap: 4px; }
+    .total-label { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+    .total-number {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .streak-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: rgba(251,191,36,0.06);
+      border: 1px solid rgba(251,191,36,0.15);
+      border-radius: 16px;
+      padding: 16px 28px;
+    }
+
+    .streak-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent-yellow);
+    }
+
+    .streak-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── CTA Button ── */
+    .cta-wrap {
+      animation: fadeUp 0.9s ease 0.55s both;
+      margin-bottom: 48px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #fbbf24, #f97316);
+      color: #0a0a0a;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      padding: 18px 40px;
+      border-radius: 100px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.35s ease;
+      box-shadow: 0 8px 30px rgba(251,191,36,0.3);
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #fde68a, #fbbf24);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 16px 50px rgba(251,191,36,0.45);
+    }
+
+    .cta-btn:hover::before { opacity: 1; }
+    .cta-btn:active { transform: scale(0.97); }
+
+    .cta-btn span, .cta-btn svg {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .cta-btn:hover .cta-arrow {
+      transform: translate(4px, -4px);
+    }
+
+    /* ── Feature pills row ── */
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      animation: fadeUp 0.9s ease 0.65s both;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      transition: border-color 0.3s, color 0.3s, transform 0.3s;
+    }
+
+    .pill:hover {
+      border-color: rgba(251,191,36,0.3);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: auto;
+      padding-top: 60px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: rgba(148,163,184,0.5);
+      animation: fadeUp 0.9s ease 0.75s both;
+      letter-spacing: 0.5px;
+    }
+
+    footer a {
+      color: rgba(251,191,36,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--accent-yellow); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .total-card { flex-direction: column; gap: 20px; text-align: center; }
+      nav { flex-direction: column; gap: 16px; margin-bottom: 48px; }
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Welcome to My Coding Journey 🚀</h1>
-  <p>Explore my LeetCode profile and track my progress:</p>
 
-  <a href="https://leetcode.com/u/shriya_1411/" target="_blank" rel="noopener noreferrer" onclick="gtag('event', 'click', {
-       event_category: 'LeetCode',
-       event_label: 'Profile'
-     });">
-    Visit my LeetCode Profile
-  </a>
+  <canvas id="canvas"></canvas>
+
+  <div class="wrapper">
+
+    <!-- Nav -->
+    <nav>
+      <div class="nav-logo">Leet<span>Lens</span></div>
+      <div class="nav-badge">
+        <span class="pulse-dot"></span>
+        Actively Grinding
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-eyebrow">⚡ coding journey</div>
+      <h1>Turning <span class="gradient-text">problems</span><br>into progress</h1>
+      <p>Every solved problem is a step forward. Tracking my LeetCode journey — one algorithm at a time.</p>
+    </section>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card easy">
+        <div class="stat-label"><span class="stat-dot"></span> Easy</div>
+        <div class="stat-number" data-target="42" id="easy-count">0</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="68"></div></div>
+      </div>
+      <div class="stat-card medium">
+        <div class="stat-label"><span class="stat-dot"></span> Medium</div>
+        <div class="stat-number" data-target="31" id="medium-count">0</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="48"></div></div>
+      </div>
+      <div class="stat-card hard">
+        <div class="stat-label"><span class="stat-dot"></span> Hard</div>
+        <div class="stat-number" data-target="9" id="hard-count">0</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" data-width="20"></div></div>
+      </div>
+    </div>
+
+    <!-- Total Card -->
+    <div class="total-card">
+      <div class="total-left">
+        <div class="total-label">Problems Solved</div>
+        <div class="total-number" data-target="82" id="total-count">0</div>
+      </div>
+      <div class="streak-badge">
+        <div class="streak-num">🔥 14</div>
+        <div class="streak-label">Day Streak</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-wrap">
+      <a
+        id="leetcode-profile-btn"
+        href="https://leetcode.com/u/shriya_1411/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="cta-btn"
+        onclick="gtag('event', 'click', { event_category: 'LeetCode', event_label: 'Profile' });">
+        <span>View Full Profile</span>
+        <svg class="cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 17L17 7M17 7H7M17 7V17"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Pills -->
+    <div class="pills">
+      <div class="pill">📊 Arrays & Hashing</div>
+      <div class="pill">🌲 Trees & Graphs</div>
+      <div class="pill">🔄 Dynamic Programming</div>
+      <div class="pill">🔍 Binary Search</div>
+      <div class="pill">📐 Sliding Window</div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      Built with ❤️ by <a href="https://github.com/shriya7756" target="_blank" rel="noopener noreferrer">Shriya</a> &nbsp;·&nbsp; Powered by LeetCode
+    </footer>
+
+  </div>
+
+  <script>
+    /* ── Particle canvas ── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.floor((W * H) / 18000);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.5 + 0.3,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          alpha: Math.random() * 0.5 + 0.1,
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(251,191,36,${p.alpha})`;
+        ctx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H;
+        if (p.y > H) p.y = 0;
+      });
+
+      // Draw connecting lines between nearby particles
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(251,191,36,${0.06 * (1 - dist / 100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+    resize();
+    initParticles();
+    drawParticles();
+
+    /* ── Counter animation ── */
+    function animateCounter(el, target, duration = 1800) {
+      let start = null;
+      const step = (ts) => {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        el.textContent = Math.floor(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      };
+      requestAnimationFrame(step);
+    }
+
+    /* ── Progress bar animation ── */
+    function animateBars() {
+      document.querySelectorAll('.stat-bar-fill').forEach(bar => {
+        const w = bar.getAttribute('data-width');
+        setTimeout(() => { bar.style.width = w + '%'; }, 200);
+      });
+    }
+
+    /* ── Intersection Observer to trigger on scroll into view ── */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(document.getElementById('easy-count'), 42);
+          animateCounter(document.getElementById('medium-count'), 31, 2000);
+          animateCounter(document.getElementById('hard-count'), 9, 2200);
+          animateCounter(document.getElementById('total-count'), 82, 1600);
+          animateBars();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+
+    observer.observe(document.querySelector('.stats-grid'));
+
+    /* ── Mouse parallax on hero ── */
+    document.addEventListener('mousemove', (e) => {
+      const hero = document.querySelector('.hero');
+      const xRatio = (e.clientX / window.innerWidth - 0.5) * 10;
+      const yRatio = (e.clientY / window.innerHeight - 0.5) * 6;
+      hero.style.transform = `translate(${xRatio}px, ${yRatio}px)`;
+    });
+  </script>
 
 </body>
-
 </html>
